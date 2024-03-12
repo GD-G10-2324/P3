@@ -27,11 +27,13 @@ token = "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"
 client_id = "3bab62c6318084a0999b"
 client_secret = "9d5c1a69fb0c65cf45780164de266f100cd11d3c"
 # contraseña atlas
-usernameMongo = 'PAULACASTILLEJOBRAVO'
-passwordMongo = 'KtBpNycnHOlwMwT7'
+# usernameMongo = 'PAULACASTILLEJOBRAVO'
+# passwordMongo = 'KtBpNycnHOlwMwT7'
 headers = {'Authorization': 'Bearer '+token, 'Accept': 'application/vnd.github+json'}
 
-MONGODB_HOST = f'mongodb+srv://{usernameMongo}:{passwordMongo}@cluster0.fus1bnz.mongodb.net/'
+# MONGODB_HOST = f'mongodb+srv://{usernameMongo}:{passwordMongo}@cluster0.fus1bnz.mongodb.net/'
+# MONGODB_PORT = 27017
+MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
 DB_NAME = 'github'
 COLLECTION_COMMITS = 'commits'
