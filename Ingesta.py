@@ -44,6 +44,7 @@ max_pages = math.ceil((get_commits_count(owner_name=user, repo_name=project)/100
 for page in range (1+max_pages): #range tiene de intervalo [0,range-1]
     query= {'client_id': client_id, 'client_secret': client_secret}
     rate_limit = requests.get(rate_url, params=query, headers=headers).json()['resources']['core']
+    print(f'Página {page} de {max_pages}', end=' ')
     print(rate_limit)
     if rate_limit['remaining'] > 0:
         # CONSULTA DE TODOS LOS COMMITS DE 100 EN 100
@@ -54,8 +55,10 @@ for page in range (1+max_pages): #range tiene de intervalo [0,range-1]
             rate_limit = requests.get(rate_url, params=query, headers=headers).json()['resources']['core']
             if rate_limit['remaining'] <= 0:
                 delta = (rate_limit['reset']-time.time())/1000
+                print(f"Esperando {delta} segundos para evitar bloqueos de velocidad...")
                 time.sleep(delta)
 
+            print(f"Procesando commit {commit['sha']}...")
             #CONSULTA INDIVIDUAL DE CADA COMMIT
             commitProperties_url = commit_url.format(user, project, commit['sha'])
             commitSpecs = requests.get(commitProperties_url, params=query, headers=headers).json()
@@ -74,4 +77,5 @@ for page in range (1+max_pages): #range tiene de intervalo [0,range-1]
             collCommits.insert_one(commit)
     else:
         delta = (rate_limit['reset']-time.time())/1000
+        print(f"Esperando {delta} segundos para evitar bloqueos de velocidad...")
         time.sleep(delta)
