@@ -41,9 +41,11 @@ def main():
     rate_url = 'https://api.github.com/rate_limit'
     user= 'sourcegraph'
     project= 'sourcegraph'
-    max_pages = math.ceil((get_commits_count(owner_name=user, repo_name=project)/100))
-
-    for page in range (1+max_pages-FORW): #range tiene de intervalo [0,range-1]
+    total_commits = get_commits_count(owner_name=user, repo_name=project)
+    max_pages = math.ceil(total_commits/100)
+    print(f'Número de cambios de {project} a insertar en la BD: {total_commits}')
+    #empezar desde 1 porque con 0 existen duplicados, añadir 1 unidad para rango cerrado:
+    for page in range (1,max_pages-FORW+1):
         query= {'client_id': client_id, 'client_secret': client_secret}
         response = requests.get(rate_url, params=query, headers=headers)
         raise_status = str(response.raise_for_status())
@@ -106,6 +108,7 @@ def main():
             delta = (rate_limit['reset']-time.time())/1000
             print(f"Esperando {delta} segundos para evitar bloqueos de velocidad...")
             time.sleep(delta)
+    print('Ingesta de datos finalizada!')
 
 if __name__ == "__main__":
     try:
